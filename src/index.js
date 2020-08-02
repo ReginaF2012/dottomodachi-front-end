@@ -1,4 +1,7 @@
 const BASEURL = "http://localhost:3000"
+
+const userAdapter = new UserAdapter(BASEURL)
+// landing page is login form. What the page looks like will be determined on this variable; state.
 let state = {page: "login" }
 
 const mainSection = document.getElementById('main')
@@ -16,7 +19,7 @@ const loginForm = `
         <form id="login-form">
             <div class="field">
                 <p class="control has-icons-left has-icons-right">
-                    <input class="input is-large" type="text" placeholder="Username">
+                    <input class="input is-large" id="login-username-input" type="text" placeholder="Username">
                     <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
                     </span>
@@ -24,7 +27,7 @@ const loginForm = `
             </div>
             <div class="field">
                 <p class="control has-icons-left">
-                    <input class="input is-large" type="password" placeholder="Password">
+                    <input class="input is-large" id="login-password-input" type="password" placeholder="Password">
                     <span class="icon is-small is-left">
                         <i class="fas fa-lock"></i>
                     </span>
@@ -57,7 +60,7 @@ const signupForm = `
         <form id="login-form">
             <div class="field">
                 <p class="control has-icons-left has-icons-right">
-                    <input class="input is-large" id="signup-username" type="text" placeholder="Username">
+                    <input class="input is-large" id="signup-username-input" type="text" placeholder="Username">
                     <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
                     </span>
@@ -65,7 +68,7 @@ const signupForm = `
             </div>
             <div class="field">
                 <p class="control has-icons-left">
-                    <input class="input is-large" id="signup-password" type="password" placeholder="Password">
+                    <input class="input is-large" id="signup-password-input" type="password" placeholder="Password">
                     <span class="icon is-small is-left">
                         <i class="fas fa-lock"></i>
                     </span>
@@ -73,14 +76,14 @@ const signupForm = `
             </div>
             <div class="field">
             <p class="control has-icons-left">
-                <input class="input is-large" id="signup-password-confirmation" type="password" placeholder="Password Confirmation">
+                <input class="input is-large" id="signup-password-conf-input" type="password" placeholder="Password Confirmation">
                 <span class="icon is-small is-left">
                     <i class="fas fa-lock"></i>
                 </span>
             </p>
             </div>
             <div class="field submit"">
-                <p class="control">
+                <p id="sign-up-button-container" class="control">
                     <button id="sign-up-button" class="button is-block is-info is-large is-fullwidth">
                         Sign Up
                     </button>
@@ -92,8 +95,8 @@ const signupForm = `
     </div>
     </form>
 `
-
-function renderPage(){
+// determine what the page needs to look like based on the state assigned to it
+function renderLandingPage(){
     switch(state.page){
         case('login'):
         mainSection.innerHTML = loginForm
@@ -102,24 +105,56 @@ function renderPage(){
         mainSection.innerHTML = signupForm
         break;
     }
+    // defining these here because this is when these elements are loaded into the DOM  
     let submit = document.querySelector(".submit")
     let linkArea = document.querySelector(".link")
     linkArea.addEventListener('click', renderLoginOrSignup)
-    submit.addEventListener('click', login)
+    submit.addEventListener('click', loginOrSignup)
 }
 
-function login(e){
+function loginOrSignup(e){
+    e.preventDefault()
+    if (e.target.id === "sign-up-button"){
 
+        let userObj = { user: {
+            username: document.getElementById('signup-username-input').value,
+            password: document.getElementById('signup-password-input').value,
+            password_confirmation: document.getElementById('signup-password-conf-input').value
+            }
+        }
+
+        userAdapter.signUpUser(userObj)
+
+    }else if(e.target.id === "login-button"){
+        
+        let userObj = { user: {
+            username: document.getElementById('login-username-input').value,
+            password: document.getElementById('login-password-input').value
+            }
+        }
+        userAdapter.loginUser(userObj)
+    }
+    document.querySelector('form').reset()
 }
 
 function renderLoginOrSignup(e){
+    e.preventDefault()
     if (e.target.id === "log-in-link"){
         state.page = "login"
-        renderPage()
+        renderLandingPage()
     } else if (e.target.id === "sign-up-link"){
         state.page = "signup"
-        renderPage()
+        renderLandingPage()
     }
 }
 
-renderPage()
+function keepLoggedIn(){
+    if (!!localStorage.getItem('jwt_token')){
+        state.page = "logged-in"
+        userAdapter.autoLogin(localStorage.getItem('jwt_token'))
+    } else {
+        renderLandingPage()
+    }
+}
+
+keepLoggedIn()
