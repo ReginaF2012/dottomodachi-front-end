@@ -43,7 +43,6 @@ class UserAdapter {
     }
 
     autoLogin(token){
-        console.log(localStorage.getItem('jwt_token'));
         fetch(this.baseURL+"/autologin", {
           method: 'POST',
           headers: {
@@ -53,7 +52,10 @@ class UserAdapter {
         .then(response => response.json())
         .then(json => {
             if (!!json.errors){
+                localStorage.clear()
                 alert(json.errors)
+                state.page = 'login'
+                renderLandingPage()
             } else {
               let loggedInUser = new User(json.userdata.user)
               localStorage.setItem('jwt_token', json.jwt)
