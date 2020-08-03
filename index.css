@@ -1,0 +1,33 @@
+/* dottomodachiContainerColumn.style.backgroundImage = "url(./public/images/egg.png)"
+dottomodachiContainerColumn.style.backgroundRepeat = "no-repeat"
+dottomodachiContainerColumn.style.backgroundPosition = "center"
+dottomodachiContainerColumn.style.backgroundSize = "contain" */
+
+.dottomodachi-div {
+    background-image: url("./public/images/egg2.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height: 560px;
+    width: 550px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.dottomodachi-div img{
+    border-radius: 10%;
+    position: absolute;
+    top: 15%;
+    left: 36%;
+  }
+
+#sprite-logo {
+    border-radius: 10%;
+}
+
+.progress-bars {
+    position: absolute;
+    top: 40%;
+    left: 31%;
+}
+

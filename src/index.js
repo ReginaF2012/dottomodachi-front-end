@@ -14,7 +14,7 @@ const loginForm = `
         <p class="subtitle has-text-black">Please login to proceed.</p>
         <div class="box">
             <figure class="avatar">
-                <img src="./public/images/test-sprite.jpeg">
+                <img id="sprite-logo" src="./public/images/test-sprite.jpeg">
             </figure>
         <form id="login-form">
             <div class="field">
