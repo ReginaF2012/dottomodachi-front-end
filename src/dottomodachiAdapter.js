@@ -20,7 +20,7 @@ class DottomodachiAdapter{
         })
     }
 
-    updateDotomodachi(dottomodachiObj){fetch(this.baseURL, { method: "PATCH",
+    updateDottomodachi(dottomodachiObj, id){fetch(this.baseURL+`/${id}`, { method: "PATCH",
     headers: {
         'Authorization':`Bearer ${localStorage.jwt_token}`,
         'Content-type':'application/json'

@@ -86,21 +86,22 @@ class Dottomodachi {
         mealButton.className = "button is-small is-info is-rounded"
         mealButton.innerText = "Meal"
         buttonsArea.appendChild(mealButton)
-        mealButton.addEventListener('click', (e) => this.meal())
+
+        mealButton.addEventListener('click', this.meal.bind(this))
 
         let playButton = document.createElement('button')
         this.playButton = playButton
         playButton.className = "button is-small is-info is-rounded"
         playButton.innerText = "Play"
         buttonsArea.appendChild(playButton)
-        playButton.addEventListener('click', (e) => this.play())
+        playButton.addEventListener('click', this.play.bind(this))
 
         let snackButton = document.createElement('button')
         this.snackButton = snackButton
         snackButton.className = "button is-small is-info is-rounded"
         snackButton.innerText = "Snack"
         buttonsArea.appendChild(snackButton)
-        snackButton.addEventListener('click', (e) => this.snack())
+        snackButton.addEventListener('click', this.snack.bind(this))
 
         // add progressbars and buttons
         dottomodachiDiv.append(progressBarsContainer, buttonsArea)
@@ -113,17 +114,18 @@ class Dottomodachi {
     }
 
     startGame(){
-        this.timer = window.setInterval( () => this.meterHandler(), 1000)
+        this.timer = window.setInterval(this.gameHandler.bind(this), 1000)
     }
 
-    meterHandler(){
+    gameHandler(){
+
 
         //start out with all of the buttons enabled
         this.mealButton.disabled = false
         this.snackButton.disabled = false
         this.playButton.disabled = false
         
-        //disable the buttons when values are  > 100
+        //disable the buttons when values are > 99
         if (this.hungerMeter > 99){
             this.snackButton.disabled = true
             this.mealButton.disabled = true
@@ -147,6 +149,25 @@ class Dottomodachi {
 
         //update the progress bars
         this.progressBarsContainer.innerHTML = this.renderProgressBarsInnerHTML()
+
+        //make a patch request
+        //I have to make a new object because everything on my rails backend is snake case
+        dottomodachiAdapter.updateDottomodachi(this.makeDottomodachiObj(), this.id)
+    }
+
+    makeDottomodachiObj = () => {
+        return {dottomodachi: {
+                id: this.id,
+                name: this.name,
+                hunger_meter: this.hungerMeter,
+                happiness_meter: this.happinessMeter,
+                weight_meter: this.weightMeter,
+                total_points: this.totalPoints,
+                stage: this.stage,
+                evo_type: this.evoType,
+                evolution_countdown: this.evolutionCountdown  
+            }
+        }
     }
 
     handlePoints(){
