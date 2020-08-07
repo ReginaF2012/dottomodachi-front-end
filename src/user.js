@@ -26,6 +26,7 @@ class User {
                 localStorage.removeItem('jwt_token')
                 state.page = 'login'
                 logoutArea.innerHTML = ""
+                Dottomodachi.all.forEach(dottomodachi => clearInterval(dottomodachi.timer))
                 renderLandingPage()
             }
         })

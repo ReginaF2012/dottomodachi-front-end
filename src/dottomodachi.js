@@ -17,13 +17,14 @@ class Dottomodachi {
 
     //https://www.w3resource.com/javascript-exercises/javascript-math-exercise-37.php
     //this is for php but we will see if it works for JS too!
+    //use this to prevent values from going above or below 100
     valueLimit(val, min=0, max=100) {
         return val < min ? min : (val > max ? max : val)
       }
       
 
     renderProgressBarsInnerHTML(){
-        let weightLabel = "Healthy"
+        let weightLabel = ""
         if(this.weightMeter >= 75){
             weightLabel = "Overweight"
         }else if(this.weightMeter <= 25){
@@ -32,7 +33,7 @@ class Dottomodachi {
             weightLabel = "Normal Weight"
         }
         return `
-        <h1>Name: <strong>${this.name}</strong></h1>
+        <h1><strong>${this.name}</strong></h1>
         <label for="hunger">Hunger</label>
         <progress id="${this.id}-hunger" class="progress is-small is-success" value="${this.hungerMeter}" max="100">${this.hungerMeter}%</progress>
         <label for="happiness">Happiness</label>
@@ -121,10 +122,41 @@ class Dottomodachi {
             this.mealButton.disabled = true
         }
 
+        this.handlePoints()
+
         this.hungerMeter = this.valueLimit(this.hungerMeter - 1)
         this.happinessMeter = this.valueLimit(this.happinessMeter -1 )
         this.progressBarsContainer.innerHTML = this.renderProgressBarsInnerHTML()
     }
+
+    handlePoints(){
+        this.tallyHappinessOrHungerPoints(this.hungerMeter)
+        this.tallyHappinessOrHungerPoints(this.happinessMeter)
+        this.tallyWeightPoints()
+        console.log(this.totalPoints)
+    }
+
+    tallyHappinessOrHungerPoints(status){
+        if (status < 25){
+            this.totalPoints -= 5
+        } else if (status < 50){
+            this.totalPoints -= 3
+        } else if (status < 75){
+            this.totalPoints -= 3
+        } else {
+            this.totalPoints += 5
+        }
+    }
+
+    tallyWeightPoints(){
+        if (this.weightMeter > 75 || this.weightMeter < 26){
+            this.totalPoints -= 3
+        } else {
+            this.totalPoints += 3
+        }
+    }
+
+
 
     meal(e){
         this.weightMeter = this.valueLimit(this.weightMeter + 1)
