@@ -1,6 +1,7 @@
 const BASEURL = "http://localhost:3000"
 
 const userAdapter = new UserAdapter(BASEURL)
+const dottomodachiAdapter = new DottomodachiAdapter(BASEURL+'/dtomos')
 // landing page is login form. What the page looks like will be determined on this variable; state.
 let state = {page: "login" }
 
