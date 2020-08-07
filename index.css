@@ -28,6 +28,13 @@ dottomodachiContainerColumn.style.backgroundSize = "contain" */
 .progress-bars {
     position: absolute;
     top: 40%;
-    left: 31%;
+    left: 38%;
+}
+
+.buttons-area {
+    position: absolute;
+    top: 75%;
+    left: 33%;
+
 }
 
