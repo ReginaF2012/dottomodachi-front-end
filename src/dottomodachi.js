@@ -21,9 +21,13 @@ class Dottomodachi {
     valueLimit(val, min=0, max=100) {
         return val < min ? min : (val > max ? max : val)
       }
-      
 
+      //the values in the progress bars are going to change every second, so I thought it would be
+      //easy to save the innerHTML to a function to call on
     renderProgressBarsInnerHTML(){
+        
+        //this is just to change the label of the weight meter, so hopefully people understand
+        // that they want it in the middle, not at either extreme
         let weightLabel = ""
         if(this.weightMeter >= 75){
             weightLabel = "Overweight"
@@ -32,6 +36,7 @@ class Dottomodachi {
         }else{
             weightLabel = "Normal Weight"
         }
+  
         return `
         <h1><strong>${this.name}</strong></h1>
         <label for="hunger">Hunger</label>
@@ -43,13 +48,17 @@ class Dottomodachi {
         `
     }
 
+
+
     renderDottomodachi(){
-        let mainSection = document.getElementById('main')
+        //grab the main div that holds all dottomodachiDivs 
         let dottomodachiContainer = document.getElementById('dottomodachi-container')
+
         //create area for individual dottomodachi
         let dottomodachiDiv = document.createElement('div')
         dottomodachiDiv.className =  "dottomodachi-div"
         dottomodachiDiv.dataset.id = `${this.id}`
+
         //create element for spite img
         let sprite = document.createElement('img')
         sprite.src = `${this.gif}`
@@ -62,12 +71,16 @@ class Dottomodachi {
         let progressBarsContainer = document.createElement('div')
         progressBarsContainer.className = "progress-bars has-text-centered"
         progressBarsContainer.id = `${this.id}-progress-bars`
+
+        //I will need to update this frequently so I'm saving it to the instance of the dottomodachi
         this.progressBarsContainer = progressBarsContainer
         progressBarsContainer.innerHTML = this.renderProgressBarsInnerHTML()
 
-
+        //create div to hold all of the buttons
         let buttonsArea = document.createElement('div')
         buttonsArea.className = "buttons-area"
+
+        //create each button and eventListener
         let mealButton = document.createElement('button')
         this.mealButton = mealButton
         mealButton.className = "button is-small is-info is-rounded"
@@ -91,9 +104,10 @@ class Dottomodachi {
 
         // add progressbars and buttons
         dottomodachiDiv.append(progressBarsContainer, buttonsArea)
+
         //add individual dottomodachi div to main div
         dottomodachiContainer.appendChild(dottomodachiDiv)
-        mainSection.appendChild(dottomodachiContainer)
+
         this.startGame()
 
     }
@@ -104,10 +118,12 @@ class Dottomodachi {
 
     meterHandler(){
 
+        //start out with all of the buttons enabled
         this.mealButton.disabled = false
         this.snackButton.disabled = false
         this.playButton.disabled = false
-
+        
+        //disable the buttons when values are  > 100
         if (this.hungerMeter > 99){
             this.snackButton.disabled = true
             this.mealButton.disabled = true
@@ -121,11 +137,15 @@ class Dottomodachi {
             this.snackButton.disabled = true
             this.mealButton.disabled = true
         }
-
+        
+        //tally the points
         this.handlePoints()
 
+        //decrease the hunger and happiness meters, but not below 0
         this.hungerMeter = this.valueLimit(this.hungerMeter - 1)
         this.happinessMeter = this.valueLimit(this.happinessMeter -1 )
+
+        //update the progress bars
         this.progressBarsContainer.innerHTML = this.renderProgressBarsInnerHTML()
     }
 
@@ -133,7 +153,6 @@ class Dottomodachi {
         this.tallyHappinessOrHungerPoints(this.hungerMeter)
         this.tallyHappinessOrHungerPoints(this.happinessMeter)
         this.tallyWeightPoints()
-        console.log(this.totalPoints)
     }
 
     tallyHappinessOrHungerPoints(status){
