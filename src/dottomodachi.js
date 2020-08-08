@@ -15,16 +15,16 @@ class Dottomodachi {
         Dottomodachi.all.push(this)
     }
 
-    static renderAdoptionForm(){
-        
-    }
-
     //https://www.w3resource.com/javascript-exercises/javascript-math-exercise-37.php
     //this is for php but we will see if it works for JS too!
     //use this to prevent values from going above or below 100
     valueLimit(val, min=0, max=100) {
         return val < min ? min : (val > max ? max : val)
       }
+
+    setGif(){
+        return this.gif = `./public/animations/stage-${this.stage}-${this.evoType}.gif`
+    }
 
       //the values in the progress bars are going to change every second, so I thought it would be
       //easy to save the innerHTML to a function to call on
@@ -67,7 +67,7 @@ class Dottomodachi {
         //create element for spite img
         let sprite = document.createElement('img')
         this.sprite = sprite
-        sprite.src = `${this.gif}`
+        sprite.src = this.setGif()
         
         //add the sprite to the div
         dottomodachiDiv.appendChild(sprite)
@@ -150,16 +150,16 @@ class Dottomodachi {
                     this.badEvolve()
                     break;
                 }
-                this.totalPoints = 0
-    
-                //decrease the hunger and happiness meters, but not below 0
-                this.hungerMeter = this.valueLimit(this.hungerMeter - 1)
-                this.happinessMeter = this.valueLimit(this.happinessMeter -1 )
-    
-                //update the progress bars
-                this.progressBarsContainer.innerHTML = this.renderProgressBarsInnerHTML()   
+                this.totalPoints = 0 
+                this.sprite.src = this.setGif()
             }
         }
+
+        //decrease the hunger and happiness meters, but not below 0
+        this.hungerMeter = this.valueLimit(this.hungerMeter - 1)
+        this.happinessMeter = this.valueLimit(this.happinessMeter -1 )
+        //update the progress bars
+        this.progressBarsContainer.innerHTML = this.renderProgressBarsInnerHTML()  
         //make a patch request
         dottomodachiAdapter.updateDottomodachi(this.makeDottomodachiObj(), this.id)
     }
@@ -170,6 +170,14 @@ class Dottomodachi {
         this.stage = 4
         clearInterval(this.timer)
         this.div.remove()
+        for (let i = 0; i < Dottomodachi.all.length; i++){
+            if (Dottomodachi.all[i] === this){
+                Dottomodachi.all.splice(i, 1)
+            }
+        }
+        if (Dottomodachi.all.length === 0){
+            renderAdoptionForm()
+        }
     }
 
     //if it's neutral I want it to be able to evolve into any of the 3 evoTypes

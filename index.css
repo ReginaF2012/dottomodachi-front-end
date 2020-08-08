@@ -24,6 +24,10 @@
     border-radius: 10%;
 }
 
+#adoption-sprite {
+    border-radius: 10%;
+}
+
 .progress-bars {
     width: 150px;
     position: absolute;

@@ -37,9 +37,6 @@ class User {
         mainSection.appendChild(dottomodachiContainer)
 
         dottomodachiAdapter.getDottomodachis()
-        if (Dottomodachi.all.count == 0){
-            Dottomodachi.renderAdoptionForm()
-        }
 
     }
 }

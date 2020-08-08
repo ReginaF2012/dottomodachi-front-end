@@ -7,6 +7,39 @@ let state = {page: "login" }
 
 const mainSection = document.getElementById('main')
 
+
+const adoptionForm = `
+    <div id="login-form" class="container has-text-centered">
+        <div class="column is-4 is-offset-4">
+            <h3 class="title has-text-black">Adopt!</h3>
+            <hr class="login-hr">
+            <p class="subtitle has-text-black">Please Adopt Me!!</p>
+            <div class="box">
+                <figure class="avatar">
+                    <img id="adoption-sprite" src="./public/animations/stage-1-neutral.gif">
+                </figure>
+                <form id="adoption-form">
+                    <div class="field">
+                        <p class="control has-icons-left has-icons-right">
+                            <input class="input is-large" id="dottomodachi-name-input" type="text" placeholder="Name">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-heart"></i>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="field submit">
+                        <p class="control" id="adopt-button-area">
+                            <button id="adopt-button" class="button is-block is-info is-large is-fullwidth">
+                                Adopt Me!!!
+                        </button>
+                    </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+`
+
 const loginForm = `
     <div id="login-form" class="container has-text-centered">
     <div class="column is-4 is-offset-4">
@@ -156,6 +189,19 @@ function keepLoggedIn(){
     } else {
         renderLandingPage()
     }
+}
+
+function renderAdoptionForm(){
+        mainSection.innerHTML = adoptionForm
+        let adoptButton = document.getElementById('adopt-button')
+        adoptButton.addEventListener('click', adopt)
+}
+
+function adopt(e){
+    e.preventDefault()
+    let name = document.getElementById('dottomodachi-name-input').value
+    dottomodachiAdapter.createDottomodachi(name)
+
 }
 
 keepLoggedIn()
