@@ -15,8 +15,8 @@ class Dottomodachi {
         Dottomodachi.all.push(this)
     }
 
-    setGif(){
-        return this.gif = `./public/animations/stage-${this.stage}-${this.evoType}.gif`
+    static renderAdoptionForm(){
+        
     }
 
     //https://www.w3resource.com/javascript-exercises/javascript-math-exercise-37.php
@@ -60,6 +60,7 @@ class Dottomodachi {
 
         //create area for individual dottomodachi
         let dottomodachiDiv = document.createElement('div')
+        this.div = dottomodachiDiv
         dottomodachiDiv.className =  "dottomodachi-div"
         dottomodachiDiv.dataset.id = `${this.id}`
 
@@ -131,37 +132,48 @@ class Dottomodachi {
         this.evolutionCountdown = this.valueLimit(this.evolutionCountdown - 1)
         //if it's at 0 evolve and update sprite
         if (this.evolutionCountdown <= 0){
-            switch(this.evoType){
-                case('neutral'):
-                this.neutralEvolve()
-                break;
-                case('good'):
-                this.goodEvolve()
-                break;
-                case('bad'):
-                this.badEvolve()
-                break;
+
+            if (this.stage > 2){
+                this.retireDottomodachi()
+            } else {
+                this.stage += 1
+                this.evolutionCountdown = 60
+    
+                switch(this.evoType){
+                    case('neutral'):
+                    this.neutralEvolve()
+                    break;
+                    case('good'):
+                    this.goodEvolve()
+                    break;
+                    case('bad'):
+                    this.badEvolve()
+                    break;
+                }
+                this.totalPoints = 0
+    
+                //decrease the hunger and happiness meters, but not below 0
+                this.hungerMeter = this.valueLimit(this.hungerMeter - 1)
+                this.happinessMeter = this.valueLimit(this.happinessMeter -1 )
+    
+                //update the progress bars
+                this.progressBarsContainer.innerHTML = this.renderProgressBarsInnerHTML()   
             }
-            
-            this.sprite.src = this.setGif()
         }
-
-        //decrease the hunger and happiness meters, but not below 0
-        this.hungerMeter = this.valueLimit(this.hungerMeter - 1)
-        this.happinessMeter = this.valueLimit(this.happinessMeter -1 )
-
-        //update the progress bars
-        this.progressBarsContainer.innerHTML = this.renderProgressBarsInnerHTML()
-
         //make a patch request
-        //I have to make a new object because everything in my rails backend is snake case
         dottomodachiAdapter.updateDottomodachi(this.makeDottomodachiObj(), this.id)
+    }
+
+
+
+    retireDottomodachi(){
+        this.stage = 4
+        clearInterval(this.timer)
+        this.div.remove()
     }
 
     //if it's neutral I want it to be able to evolve into any of the 3 evoTypes
     neutralEvolve() {
-        this.stage += 1
-        this.evolutionCountdown = 60
         if (this.totalPoints >= 130){
             this.evoType = "good"
         } else if (this.totalPoints >= 0){
@@ -169,33 +181,27 @@ class Dottomodachi {
         } else {
             this.evoType = "bad"
         }
-        this.totalPoints = 0
     }
 
     //if it's good I only want it to be able to evolve to good or neutral
     goodEvolve() {
-        this.stage += 1
-        this.evolutionCountdown = 60
         if (this.totalPoints >= 130){
             this.evoType = "good"
         } else {
             this.evoType = "neutral"
         }
-        this.totalPoints = 0
     }
 
     //if it's bad I only want it to be able to evolve into neutral or bad
     badEvolve() {
-        this.stage += 1
-        this.evolutionCountdown = 60
         if (this.totalPoints >= 130){
             this.evoType = "neutral"
         } else {
             this.evoType = "bad"
         }
-        this.totalPoints = 0
     }
 
+    //I have to make a new object because everything in my rails backend is snake case
     makeDottomodachiObj = () => {
         return {dottomodachi: {
                 id: this.id,
