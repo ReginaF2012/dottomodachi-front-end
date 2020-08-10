@@ -11,10 +11,10 @@ Fork and Clone this repository. You will need to setup the rails api back-end to
 
 This application is made to be used in tandem with the [rails api backend](https://github.com/ReginaF2012/dottomodachi-back-end). Once your server is up and running and you have `index.html` open in the browser:
 
--Users can sign up and login
--Users can adopt Dottomodachi
--Dottomodachi go through 2 evolution phases
--Once the dottomodachi has moved away a user can adopt another dottomodachi
+- Users can sign up and login
+- Users can adopt Dottomodachi
+- Dottomodachi go through 2 evolution phases
+- Once the dottomodachi has moved away a user can adopt another dottomodachi
 
 
 ## License
