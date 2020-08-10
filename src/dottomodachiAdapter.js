@@ -57,4 +57,13 @@ class DottomodachiAdapter{
         })
         .catch(errors => showDangerAlert(errors))
     }
+
+    deleteDottomodachi(id){
+        fetch(this.baseURL+`/${id}`, { method: "DELETE",
+        headers: {
+            'Authorization':`Bearer ${localStorage.jwt_token}`,
+            'Content-type':'application/json'
+        }
+        })
+    }
 }

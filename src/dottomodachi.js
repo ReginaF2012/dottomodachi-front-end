@@ -131,6 +131,7 @@ class Dottomodachi {
         // if the points are below -100 have the dottomodachi run away
         if (this.totalPoints < -100){
             this.removeDiv()
+            dottomodachiAdapter.deleteDottomodachi(this.id)
             showDangerAlert(`${this.name} ran away!!!`)
         }
 
@@ -198,12 +199,16 @@ class Dottomodachi {
         
         //display the goodbye letter
         createNote(text)
+        
 
     }
 
     removeDiv(){
         //remove it's div
         this.div.remove()
+
+        //make a patch request
+        dottomodachiAdapter.updateDottomodachi(this.makeDottomodachiObj(), this.id)
 
         //stop the game timer from ticking
         clearInterval(this.timer)
