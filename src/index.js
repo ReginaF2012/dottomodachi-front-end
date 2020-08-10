@@ -215,6 +215,7 @@ function renderLandingPage(){
     submit.addEventListener('click', loginOrSignup)
 }
 
+// making the fetch request to login or sign up a user. 
 function loginOrSignup(e){
     e.preventDefault()
     if (e.target.id === "sign-up-button"){
@@ -237,9 +238,11 @@ function loginOrSignup(e){
         }
         userAdapter.loginUser(userObj)
     }
+    //clear the form
     document.querySelector('form').reset()
 }
 
+// this is what toggles between the login and sign up forms
 function renderLoginOrSignup(e){
     e.preventDefault()
     if (e.target.id === "log-in-link"){
@@ -251,6 +254,8 @@ function renderLoginOrSignup(e){
     }
 }
 
+// When they refresh the page, or revisit the page, if they have a jwt token in local storage
+// I know they are authorized, so just automatically log them in
 function keepLoggedIn(){
     if (!!localStorage.getItem('jwt_token')){
         state.page = "logged-in"

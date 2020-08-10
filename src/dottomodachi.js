@@ -127,6 +127,8 @@ class Dottomodachi {
         
         //tally the points
         this.handlePoints()
+
+        // if the points are below -100 have the dottomodachi run away
         if (this.totalPoints < -100){
             this.removeDiv()
             showDangerAlert(`${this.name} ran away!!!`)
@@ -134,9 +136,11 @@ class Dottomodachi {
 
         //decrease the evolutionCountdown
         this.evolutionCountdown = this.valueLimit(this.evolutionCountdown - 1)
+
         //if it's at 0 evolve and update sprite
         if (this.evolutionCountdown <= 0){
-
+            
+            //there's only 3 stages so after that retire the dottomodachi
             if (this.stage > 2){
                 this.retireDottomodachi()
             } else {
@@ -159,9 +163,12 @@ class Dottomodachi {
     }
 
     evolve(){
+        //increase stage
         this.stage += 1
+        //reset evolutionCountdown
         this.evolutionCountdown = 60
 
+        //determine which evolution path to take
         switch(this.evoType){
             case('neutral'):
             this.neutralEvolve()
@@ -174,27 +181,36 @@ class Dottomodachi {
             break;
         }
 
+        //notify the user that the dottomodachi has evolved
         showSuccessAlert(`${this.name} has evolved!`)
     }
 
 
 
     retireDottomodachi(){
+        // there is no evolutions after stage 3
         this.stage = 4
+        // remove it from the page
         this.removeDiv()
-    
+
+        //determine which goodbye letter it leaves
         let text = this.goodbyeLetterText()
         
+        //display the goodbye letter
         createNote(text)
 
     }
 
     removeDiv(){
-
+        //remove it's div
         this.div.remove()
+
+        //stop the game timer from ticking
         clearInterval(this.timer)
-        //setting up app to be able to have more than 1 dottomodachi at a time
-        //if the last dottomodachi is removed render the adoption form again
+
+        // setting up app to be able to have more than 1 dottomodachi at a time
+        // if the last dottomodachi is removed render the adoption form again
+        // currently there is only ever 1 dottomodachi at a time
         for (let i = 0; i < Dottomodachi.all.length; i++){
             if (Dottomodachi.all[i] === this){
                 Dottomodachi.all.splice(i, 1)
@@ -208,6 +224,8 @@ class Dottomodachi {
     }
 
     goodbyeLetterText(){
+
+        //depending on the evolution type depends on the letter it leaves
         switch(this.evoType){
             case('neutral'):
             return `Dear ${currentUser.username},</br></br>
@@ -239,7 +257,7 @@ class Dottomodachi {
     neutralEvolve() {
         if (this.totalPoints >= 130){
             this.evoType = "good"
-        } else if (this.totalPoints >= 0){
+        } else if (this.totalPoints >= 50 ){
             this.evoType = "neutral"
         } else {
             this.evoType = "bad"
@@ -265,7 +283,7 @@ class Dottomodachi {
     }
 
     //When I send a patch request, I need to make an object with everything in snake_case for my rails back-end
-    makeDottomodachiObj = () => {
+    makeDottomodachiObj() {
         return {dottomodachi: {
                 id: this.id,
                 name: this.name,
