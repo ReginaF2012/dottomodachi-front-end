@@ -1,4 +1,4 @@
-const BASEURL = "http://localhost:3000"
+const BASEURL = "https://dottomodachi-back-end.herokuapp.com/"
 
 let currentUser
 const userAdapter = new UserAdapter(BASEURL)
