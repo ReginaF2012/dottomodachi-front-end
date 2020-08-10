@@ -41,6 +41,86 @@
     left: 30%;
 }
 
+/* The alert message box */
+.alert-danger {
+    padding: 20px;
+    background-color: #f44336; /* Red */
+    color: white;
+  }
+
+.alert-success {
+    padding: 20px;
+    background-color: #00ff55; /* Green */
+    color: white;
+  }
+  
+  /* The close button */
+  .closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  /* When moving the mouse over the close button */
+  .closebtn:hover {
+    color: black;
+  }
+
+  /* the container for the alerts is sticky */
+  div.sticky {
+    z-index: 1;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+  }
+
+
+  #note-container {
+    width:50%;
+    height:50%;
+    position:fixed;
+    top: 50%;
+    left:25%;
+    z-index:100;
+  }
+  /* Callout box - fixed position at the bottom of the page */
+.callout {
+    position: relative;
+    margin: auto;
+    width: 40rem;
+    height: 300px;
+  }
+  
+  /* Callout container/body */
+  .callout-container {
+    border-style: solid;
+    border-color: #42ca8b;
+    padding: 15px;
+    background: rgb(255,255,255);
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(104,255,185,1) 100%);
+    color: black
+  }
+
+  /* Close button */
+.callout-closebtn {
+    position: absolute;
+    top: 1px;
+    right: 5px;
+    color: darkslategrey;
+    font-size: 30px;
+    cursor: pointer;
+  }
+  
+  /* Change color on mouse-over */
+  .callout-closebtn:hover {
+    color: black;
+  }
+
 @media only screen and (max-width: 600px){
     .dottomodachi-div {
         margin: 0;

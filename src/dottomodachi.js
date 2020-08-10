@@ -127,6 +127,10 @@ class Dottomodachi {
         
         //tally the points
         this.handlePoints()
+        if (this.totalPoints < -100){
+            this.removeDiv()
+            showDangerAlert(`${this.name} ran away!!!`)
+        }
 
         //decrease the evolutionCountdown
         this.evolutionCountdown = this.valueLimit(this.evolutionCountdown - 1)
@@ -136,21 +140,11 @@ class Dottomodachi {
             if (this.stage > 2){
                 this.retireDottomodachi()
             } else {
-                this.stage += 1
-                this.evolutionCountdown = 60
-    
-                switch(this.evoType){
-                    case('neutral'):
-                    this.neutralEvolve()
-                    break;
-                    case('good'):
-                    this.goodEvolve()
-                    break;
-                    case('bad'):
-                    this.badEvolve()
-                    break;
-                }
+
+                this.evolve()
+                //reset the points after evolution
                 this.totalPoints = 0 
+                //update the gif
                 this.sprite.src = this.setGif()
             }
         }
@@ -164,12 +158,43 @@ class Dottomodachi {
         dottomodachiAdapter.updateDottomodachi(this.makeDottomodachiObj(), this.id)
     }
 
+    evolve(){
+        this.stage += 1
+        this.evolutionCountdown = 60
+
+        switch(this.evoType){
+            case('neutral'):
+            this.neutralEvolve()
+            break;
+            case('good'):
+            this.goodEvolve()
+            break;
+            case('bad'):
+            this.badEvolve()
+            break;
+        }
+
+        showSuccessAlert(`${this.name} has evolved!`)
+    }
+
 
 
     retireDottomodachi(){
         this.stage = 4
-        clearInterval(this.timer)
+        this.removeDiv()
+    
+        let text = this.goodbyeLetterText()
+        
+        createNote(text)
+
+    }
+
+    removeDiv(){
+
         this.div.remove()
+        clearInterval(this.timer)
+        //setting up app to be able to have more than 1 dottomodachi at a time
+        //if the last dottomodachi is removed render the adoption form again
         for (let i = 0; i < Dottomodachi.all.length; i++){
             if (Dottomodachi.all[i] === this){
                 Dottomodachi.all.splice(i, 1)
@@ -177,6 +202,36 @@ class Dottomodachi {
         }
         if (Dottomodachi.all.length === 0){
             renderAdoptionForm()
+        }
+        
+
+    }
+
+    goodbyeLetterText(){
+        switch(this.evoType){
+            case('neutral'):
+            return `Dear ${currentUser.username},</br></br>
+            Thank you for taking care of me. I've left to start a life of my own. Times were not always the best but you did what you could. Please consider adopting again.</br></br>
+
+            Sincerely, ${this.name}
+            `
+            break;
+            case('good'):
+            return `Dear ${currentUser.username},</br></br>
+
+            I've moved out to start a life of my own. You've done such a wonderful job taking care of me, won't you please consider adopting again?</br></br>
+
+            Love, ${this.name}
+            `
+            break;
+            case('bad'):
+            return `${currentUser.username},</br></br>
+
+            I've moved out, I couldn't stand your neglect any longer. Hopefully you do better next time.</br></br>
+
+            -${this.name}
+            `
+            break;
         }
     }
 
@@ -209,7 +264,7 @@ class Dottomodachi {
         }
     }
 
-    //I have to make a new object because everything in my rails backend is snake case
+    //When I send a patch request, I need to make an object with everything in snake_case for my rails back-end
     makeDottomodachiObj = () => {
         return {dottomodachi: {
                 id: this.id,

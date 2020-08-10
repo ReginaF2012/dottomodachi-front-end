@@ -13,16 +13,17 @@ class DottomodachiAdapter{
         })
         .then(resp => resp.json())
         .then(dottomodachis => {
+
             dottomodachis.forEach(dottomodachi => {
-                let newDottomodachi = new Dottomodachi(dottomodachi)
-                newDottomodachi.renderDottomodachi()
+                dottomodachi = new Dottomodachi(dottomodachi)
+                dottomodachi.renderDottomodachi()
             })
-        })
-        .then( () =>{
+
             if (Dottomodachi.all.length === 0){
                 renderAdoptionForm()
             }
-        })   
+        })
+        .catch(errors => showDangerAlert(errors))
     }
 
     updateDottomodachi(dottomodachiObj, id){
@@ -47,6 +48,13 @@ class DottomodachiAdapter{
         body: JSON.stringify(body)
         })
         .then(resp => resp.json())
-        .then( keepLoggedIn() )
+        .then(json => {
+            if (!!json.errors){
+                showDangerAlert(json.errors)
+            } else {
+                userAdapter.autoLogin(localStorage.getItem('jwt_token')) 
+            }
+        })
+        .catch(errors => showDangerAlert(errors))
     }
 }

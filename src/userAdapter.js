@@ -13,14 +13,14 @@ class UserAdapter {
               .then(json => {
                   // json => {userdata: {user: username: ___, id:__}, jwt: ____ }
                   if (!!json.errors){
-                      alert(json.errors)
+                      showDangerAlert(json.errors)
                   } else {
-                    let newUser = new User(json.userdata.user)
+                    currentUser = new User(json.userdata.user)
                     localStorage.setItem('jwt_token', json.jwt)
-                    newUser.renderProfile()
+                    currentUser.renderProfile()
                   }
               })
-              .catch(errors => alert(errors))
+              .catch(errors => showDangerAlert(errors))
     }
 
     loginUser(userObj){
@@ -32,14 +32,15 @@ class UserAdapter {
           .then(response => response.json())
           .then(json => {
               if (!!json.errors){
-                  alert(json.errors)
+                  showDangerAlert(json.errors)
               } else {
-                let loggedInUser = new User(json.userdata.user)
+                currentUser = new User(json.userdata.user)
                 localStorage.setItem('jwt_token', json.jwt)
-                loggedInUser.renderProfile()
+                currentUser.renderProfile()
+
               }
           })
-          .catch(errors => alert(errors))
+          .catch(errors => showDangerAlert(errors))
     }
 
     autoLogin(token){
@@ -53,16 +54,16 @@ class UserAdapter {
         .then(json => {
             if (!!json.errors){
                 localStorage.clear()
-                alert(json.errors)
+                showDangerAlert(json.errors)
                 state.page = 'login'
                 renderLandingPage()
             } else {
-              let loggedInUser = new User(json.userdata.user)
+              currentUser = new User(json.userdata.user)
               localStorage.setItem('jwt_token', json.jwt)
-              loggedInUser.renderProfile()
+              currentUser.renderProfile()
             }
         })
-        .catch(errors => alert(errors))
+        .catch(errors => showDangerAlert(errors))
     }
 
 }

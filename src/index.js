@@ -1,5 +1,6 @@
 const BASEURL = "http://localhost:3000"
 
+let currentUser
 const userAdapter = new UserAdapter(BASEURL)
 const dottomodachiAdapter = new DottomodachiAdapter(BASEURL+'/dtomos')
 // landing page is login form. What the page looks like will be determined on this variable; state.
@@ -129,6 +130,74 @@ const signupForm = `
     </div>
     </form>
 `
+
+function showDangerAlert(message){
+
+    let alertDiv = document.createElement('div')
+    alertDiv.className = "alert-danger"
+    alertDiv.innerText = `${message}`
+
+    document.getElementById('alert-container').appendChild(alertDiv)
+
+    let closeButton = document.createElement('span')
+    closeButton.className = "closebtn"
+    closeButton.innerHTML = `&times;`
+    alertDiv.appendChild(closeButton)
+
+    //alert goes away on it's own after 3 seconds
+    window.setTimeout(() => {
+        closeButton.parentElement.hidden = true
+    }, 3000)
+
+    //alert disappears when they click the closeButton
+    closeButton.addEventListener('click', close)
+}
+
+
+function showSuccessAlert(message){
+
+    let alertDiv = document.createElement('div')
+    alertDiv.className = "alert-success"
+    alertDiv.innerText = `${message}`
+
+    document.getElementById('alert-container').appendChild(alertDiv)
+
+    let closeButton = document.createElement('span')
+    closeButton.className = "closebtn"
+    closeButton.innerHTML = `&times;`
+    alertDiv.appendChild(closeButton)
+
+    //alert goes away on it's own after 3 seconds
+    window.setTimeout(() => {
+        closeButton.parentElement.hidden = true
+    }, 3000)
+
+    //alert disappears when they click the closeButton
+    closeButton.addEventListener('click', close)
+}
+
+function createNote(message){
+
+    let note = `
+    <div class="callout">
+        <span class="callout-closebtn" id="callout-close-btn">&times;</span>
+        <div class="callout-container">
+            <p>${message}</p>
+        </div>
+    </div>
+    `
+    let noteDiv = document.getElementById('note-container')
+    noteDiv.innerHTML += note
+    noteDiv.hidden = false
+    let closebtn = document.getElementById("callout-close-btn")
+    closebtn.addEventListener('click', close)
+}
+
+function close(e){
+    e.preventDefault()
+    e.target.parentElement.hidden = true
+}
+
 // determine what the page needs to look like based on the state assigned to it
 function renderLandingPage(){
     switch(state.page){
