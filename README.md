@@ -1,4 +1,4 @@
-# Dottomodachi-back-end Overview
+# Dottomodachi-front-end Overview
 
 Dottomodachi is a virtual pixel pet game with a javascript front end and a rails api backend.
 [Back-End](https://github.com/ReginaF2012/dottomodachi-back-end)
