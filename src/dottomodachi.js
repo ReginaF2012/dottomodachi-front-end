@@ -93,7 +93,8 @@ class Dottomodachi {
         mealButton.innerText = "Meal"
         buttonsArea.appendChild(mealButton)
 
-        mealButton.addEventListener('click', this.meal.bind(this))
+        let boundMeal = this.meal.bind(this)
+        mealButton.addEventListener('click', boundMeal)
 
         let playButton = document.createElement('button')
         this.playButton = playButton
@@ -128,13 +129,6 @@ class Dottomodachi {
         //tally the points
         this.handlePoints()
 
-        // if the points are below -100 have the dottomodachi run away
-        if (this.totalPoints < -100){
-            this.removeDiv()
-            dottomodachiAdapter.deleteDottomodachi(this.id)
-            showDangerAlert(`${this.name} ran away!!!`)
-        }
-
         //decrease the evolutionCountdown
         this.evolutionCountdown = this.valueLimit(this.evolutionCountdown - 1)
 
@@ -161,6 +155,13 @@ class Dottomodachi {
         this.progressBarsContainer.innerHTML = this.renderProgressBarsInnerHTML()  
         //make a patch request
         dottomodachiAdapter.updateDottomodachi(this.makeDottomodachiObj(), this.id)
+
+        // if the points are below -100 have the dottomodachi run away
+        if (this.totalPoints < -100){
+            this.removeDiv()
+            dottomodachiAdapter.deleteDottomodachi(this.id)
+            showDangerAlert(`${this.name} ran away!!!`)
+        }
     }
 
     evolve(){
@@ -207,11 +208,10 @@ class Dottomodachi {
         //remove it's div
         this.div.remove()
 
-        //make a patch request
-        dottomodachiAdapter.updateDottomodachi(this.makeDottomodachiObj(), this.id)
-
         //stop the game timer from ticking
         clearInterval(this.timer)
+
+        
 
         // setting up app to be able to have more than 1 dottomodachi at a time
         // if the last dottomodachi is removed render the adoption form again
