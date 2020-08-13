@@ -190,7 +190,11 @@ function createNote(message){
     noteDiv.innerHTML += note
     noteDiv.hidden = false
     let closebtn = document.getElementById("callout-close-btn")
-    closebtn.addEventListener('click', close)
+    closebtn.addEventListener('click', (e) => {
+        e.preventDefault()
+        e.target.parentElement.hidden = true
+        noteDiv.hidden = true
+    })
 }
 
 function close(e){
