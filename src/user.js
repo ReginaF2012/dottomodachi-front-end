@@ -31,6 +31,9 @@ class User {
             }
         })
 
+        let adoptionFormButtonDiv = document.getElementById('adoption-button-container')
+        adoptionFormButtonDiv.hidden = false
+
         //create area for dottomodachis
         let dottomodachiContainer = document.createElement('div')
         dottomodachiContainer.id = "dottomodachi-container"

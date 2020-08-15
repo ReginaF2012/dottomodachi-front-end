@@ -13,6 +13,7 @@ class DottomodachiAdapter{
         })
         .then(resp => resp.json())
         .then(dottomodachis => {
+           
 
             dottomodachis.forEach(dottomodachi => {
                 dottomodachi = new Dottomodachi(dottomodachi)
@@ -52,10 +53,13 @@ class DottomodachiAdapter{
             if (!!json.errors){
                 showDangerAlert(json.errors)
             } else {
-                userAdapter.autoLogin(localStorage.getItem('jwt_token')) 
+                Dottomodachi.all = []
+                //rendering the user's profile automatically makes a get request to their dottomodachi index, loading in all the dottomodachi including the new one
+                currentUser.renderProfile()
             }
         })
         .catch(errors => showDangerAlert(errors))
+        renderAdoptionForm()
     }
 
     deleteDottomodachi(id){

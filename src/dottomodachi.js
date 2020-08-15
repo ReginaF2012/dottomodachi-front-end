@@ -55,6 +55,9 @@ class Dottomodachi {
 
 
     renderDottomodachi(){
+        if (Dottomodachi.all.length > 0){
+            searchBarContainer.hidden = false
+        }
         //grab the main div that holds all dottomodachiDivs 
         let dottomodachiContainer = document.getElementById('dottomodachi-container')
 
@@ -133,10 +136,12 @@ class Dottomodachi {
         this.evolutionCountdown = this.valueLimit(this.evolutionCountdown - 1)
 
         //if it's at 0 evolve and update sprite
-        if (this.evolutionCountdown <= 0){
+        if (this.evolutionCountdown === 0){
             
             //there's only 3 stages so after that retire the dottomodachi
             if (this.stage > 2){
+                //stop the game timer from ticking
+                clearInterval(this.timer)
                 this.retireDottomodachi()
             } else {
 
@@ -159,6 +164,8 @@ class Dottomodachi {
         // if the points are below -100 have the dottomodachi run away
         if (this.totalPoints < -100){
             this.removeDiv()
+            //stop the game timer from ticking
+            clearInterval(this.timer)
             dottomodachiAdapter.deleteDottomodachi(this.id)
             showDangerAlert(`${this.name} ran away!!!`)
         }
@@ -208,11 +215,6 @@ class Dottomodachi {
         //remove it's div
         this.div.remove()
 
-        //stop the game timer from ticking
-        clearInterval(this.timer)
-
-        
-
         // setting up app to be able to have more than 1 dottomodachi at a time
         // if the last dottomodachi is removed render the adoption form again
         // currently there is only ever 1 dottomodachi at a time
@@ -222,6 +224,7 @@ class Dottomodachi {
             }
         }
         if (Dottomodachi.all.length === 0){
+            searchBarContainer.hidden = true
             renderAdoptionForm()
         }
         

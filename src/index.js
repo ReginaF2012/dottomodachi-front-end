@@ -3,6 +3,10 @@ const BASEURL = "https://dottomodachi-back-end.herokuapp.com"
 let currentUser
 const userAdapter = new UserAdapter(BASEURL)
 const dottomodachiAdapter = new DottomodachiAdapter(BASEURL+'/dtomos')
+const adoptionFormButton = document.getElementById('adoption-form-button')
+const searchBarContainer = document.getElementById('search-bar-container')
+const searchBar = document.getElementById('search-bar-input')
+let noteDiv = document.getElementById('note-container')
 // landing page is login form. What the page looks like will be determined on this variable; state.
 let state = {page: "login" }
 
@@ -180,30 +184,41 @@ function createNote(message){
 
     let note = `
     <div class="callout">
-        <span class="callout-closebtn" id="callout-close-btn">&times;</span>
+        <span class="callout-closebtn">&times;</span>
         <div class="callout-container">
             <p>${message}</p>
         </div>
     </div>
     `
-    let noteDiv = document.getElementById('note-container')
     noteDiv.innerHTML += note
     noteDiv.hidden = false
-    let closebtn = document.getElementById("callout-close-btn")
-    closebtn.addEventListener('click', (e) => {
-        e.preventDefault()
-        e.target.parentElement.hidden = true
-        noteDiv.hidden = true
-    })
+    noteDiv.addEventListener('click', removeNote)
+
+
+}
+
+function removeNote(e){
+    if (e.target.className === "callout-closebtn"){
+        e.target.parentElement.remove()
+        // only hide the noteDiv if it is empty
+        if (noteDiv.childElementCount === 0){
+            noteDiv.hidden = true
+        }
+    }
 }
 
 function close(e){
-    e.preventDefault()
     e.target.parentElement.hidden = true
 }
 
 // determine what the page needs to look like based on the state assigned to it
 function renderLandingPage(){
+    let adoptionFormButtonDiv = document.getElementById('adoption-button-container')
+    adoptionFormButtonDiv.hidden = true
+
+    searchBarContainer.hidden = true
+    
+
     switch(state.page){
         case('login'):
         mainSection.innerHTML = loginForm
@@ -270,16 +285,57 @@ function keepLoggedIn(){
 }
 
 function renderAdoptionForm(){
-        mainSection.innerHTML = adoptionForm
-        let adoptButton = document.getElementById('adopt-button')
-        adoptButton.addEventListener('click', adopt)
+    // the search bar won't work while the adoption form is rendered because the dottomodachiContainer isn't on the page
+    searchBarContainer.hidden = true
+    mainSection.innerHTML = adoptionForm
+    let adoptButton = document.getElementById('adopt-button')
+    adoptButton.addEventListener('click', adopt)
 }
 
 function adopt(e){
+    // was getting duplicates when button button wasn't disabled
+    e.target.disabled = true
     e.preventDefault()
     let name = document.getElementById('dottomodachi-name-input').value
     dottomodachiAdapter.createDottomodachi(name)
 
 }
+
+adoptionFormButton.addEventListener('click', (e) => {
+    Dottomodachi.all.forEach(dottomodachi => clearInterval(dottomodachi.timer))
+    renderAdoptionForm()
+})
+
+function searchBarResults(e){
+    //empty the containing div
+    let dottomodachiContainer = document.getElementById('dottomodachi-container')
+    dottomodachiContainer.innerHTML = ""
+    //this is the value of what the user has typed into the search bar
+    //toUpperCase since I am going to ignore case sensitivity
+    let filter = e.target.value.toUpperCase()
+    // create empty array to push matches into
+    let filteredDottomodachi = []
+    // loop over all of the dottomodachi in the all array
+    for (let i=0; i < Dottomodachi.all.length; i++){
+        // grab an instance
+        let dottomodachi = Dottomodachi.all[i]
+        // stop it's timer so points don't go down if it's not on screen
+        clearInterval(dottomodachi.timer)
+        // toUpperCase since we're ignoring case sensitivity
+        let name = dottomodachi.name.toUpperCase()
+        // https://www.w3schools.com/jsref/jsref_indexof.asp
+        // indexOf will return -1 if the name does not contain the filter
+        if (name.indexOf(filter) > -1){
+            //if it is greater than -1 then the name does contain the filter
+            //therefor push it into the array of filteredDottomodachi
+           filteredDottomodachi.push(dottomodachi)
+        }
+    }
+    // render all of the dottomodachi from the filtered array.
+    filteredDottomodachi.forEach(dottomodachi => dottomodachi.renderDottomodachi())
+}
+
+// I chose keyup because keyup fires last, allowing the browser to process the key (vs keydown)
+searchBar.addEventListener('keyup', searchBarResults)
 
 keepLoggedIn()
